@@ -16,7 +16,9 @@
  */
 package jcred;
 
-import java.io.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import java.io.InputStream;
 
 /**
  *
@@ -24,10 +26,14 @@ import java.io.*;
  */
 public class Database {
 
+	Node root;
+
 	/**
 	 * Constructor for empty credentials database.
 	 */
 	public Database() {
+
+		root = new Group("root");
 	}
 
 	/**
@@ -41,11 +47,33 @@ public class Database {
 	}
 
 	/**
-	 * Main method for debugging only.
+	 * Main method for testing and debugging only.
 	 * 
 	 * @param argv Command line parameters. (Unused.)
 	 */
 	public static void main (String[] argv) {
+
+		Node myRoot = new Group("root");
+
+		myRoot.addChild(new Group("Group 1"));
+		myRoot.getChildren().get(0).addChild(new Credential("Title 1","User 1","Pass 1"));
+		myRoot.getChildren().get(0).addChild(new Credential("Title 2","User 2","Pass 2"));
+
+		myRoot.addChild(new Group("Group 2"));
+		myRoot.getChildren().get(1).addChild(new Credential("Title 3","User 3","Pass 3"));
+		myRoot.getChildren().get(1).addChild(new Credential("Title 4","User 4","Pass 4"));
+
+		// Write test:
+		Gson gsonWriter = new Gson();
+		String jsonString = gsonWriter.toJson(myRoot);
+
+		// Read test:
+		Gson jsonReader = new GsonBuilder()
+				.registerTypeAdapter(Node.class, new NodeDeserializer())
+				.create();
+
+		Group newRoot = jsonReader.fromJson(jsonString, Group.class);
+		gsonWriter.toJson(newRoot, System.out);
 
 	}
 }

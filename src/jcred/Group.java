@@ -21,5 +21,18 @@ package jcred;
  * @author Tim Vaughan
  */
 public class Group extends Node {
-	
+
+	String groupName;
+
+	public Group (String groupName) {
+		this.groupName = groupName;
+	}
+
+	public String getName() {
+		return groupName;
+	}
+
+	public void setName(String groupName) {
+		this.groupName = groupName;
+	}
 }

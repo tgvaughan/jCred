@@ -22,21 +22,20 @@ import java.util.*;
  *
  * @author Tim Vaughan
  */
-public abstract class Node {
+public class Node {
 
-	Node parent;
 	List<Node> children;
 
 	public Node() {
 		children = new ArrayList<Node>();
 	}
 
-	public Node getParent() {
-		return parent;
-	}
-
 	public void addChild(Node child) {
 		children.add(child);
+	}
+
+	public List<Node> getChildren() {
+		return children;
 	}
 	
 }

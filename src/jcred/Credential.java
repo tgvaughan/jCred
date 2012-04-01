@@ -23,15 +23,27 @@ package jcred;
  */
 public class Credential extends Node {
 
-	// Identifying title of username/password pair:
+	// Identifying title of user/password pair:
 	String title;
 
 	// Username component of credential:
-	String username;
+	String user;
 
 	// Password component of credential:
 	String password;
 
+	/**
+	 * Constructor to initialise new credential.
+	 * 
+	 * @param title
+	 * @param user
+	 * @param password 
+	 */
+	public Credential(String title, String user, String password) {
+		this.title = title;
+		this.user = user;
+		this.password = password;
+	}
 	/*
 	 * Getters and setters:
 	 */
@@ -52,12 +64,12 @@ public class Credential extends Node {
 		this.title = title;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getUser() {
+		return user;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setUsername(String user) {
+		this.user = user;
 	}
 	
 	
