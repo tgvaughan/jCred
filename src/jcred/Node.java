@@ -22,7 +22,7 @@ import java.util.*;
  *
  * @author Tim Vaughan
  */
-public class Node {
+public abstract class Node {
 
 	List<Node> children;
 

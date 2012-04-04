@@ -19,6 +19,7 @@ package jcred;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 /**
  *
@@ -33,6 +34,7 @@ public class Database {
 	 */
 	public Database() {
 
+		// Create manditory root group.
 		root = new Group("root");
 	}
 
@@ -44,6 +46,12 @@ public class Database {
 	 */
 	public Database(InputStream iStream) {
 
+		Gson jsonReader = new GsonBuilder()
+				.registerTypeAdapter(Node.class, new NodeDeserializer())
+				.create();
+
+		root = jsonReader.fromJson(new InputStreamReader(iStream), Node.class);
+
 	}
 
 	/**
@@ -51,7 +59,7 @@ public class Database {
 	 * 
 	 * @param argv Command line parameters. (Unused.)
 	 */
-	public static void main (String[] argv) {
+	public static void main (String[] argv) throws Exception {
 
 		Node myRoot = new Group("root");
 
@@ -72,7 +80,8 @@ public class Database {
 				.registerTypeAdapter(Node.class, new NodeDeserializer())
 				.create();
 
-		Group newRoot = jsonReader.fromJson(jsonString, Group.class);
+		//Node newRoot = jsonReader.fromJson(jsonString, Node.class);
+		Node newRoot = jsonReader.fromJson(jsonString, Node.class);
 		gsonWriter.toJson(newRoot, System.out);
 
 	}

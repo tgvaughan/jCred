@@ -26,7 +26,8 @@ import java.lang.reflect.Type;
 public class NodeDeserializer implements JsonDeserializer<Node> {
 
 	@Override
-	public Node deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+	public Node deserialize(JsonElement json, Type typeOfT,
+			JsonDeserializationContext context) throws JsonParseException {
 
 		JsonObject jsonObject = (JsonObject)json;
 		Node result;

@@ -16,13 +16,26 @@
  */
 package jcred;
 
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.tree.TreeModel;
 
 /**
  *
  * @author Tim Vaughan
  */
 public class JCredApp extends javax.swing.JFrame {
+
+	// Credentials database:
+	Database database;
 
 	/**
 	 * Creates new form JCredApp
@@ -42,28 +55,31 @@ public class JCredApp extends javax.swing.JFrame {
 
         jSplitPane = new javax.swing.JSplitPane();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTree1 = new javax.swing.JTree();
+        jTree = new javax.swing.JTree();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTable = new javax.swing.JTable();
         jMenuBar = new javax.swing.JMenuBar();
         jMenuFile = new javax.swing.JMenu();
-        jMenuItemSave = new javax.swing.JMenuItem();
+        jMenuItemFileNew = new javax.swing.JMenuItem();
+        jMenuItemFileLoad = new javax.swing.JMenuItem();
+        jMenuItemFileSave = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
-        jMenuItemQuit = new javax.swing.JMenuItem();
-        jMenuEdit = new javax.swing.JMenu();
+        jMenuItemFileQuit = new javax.swing.JMenuItem();
+        jMenuDatabase = new javax.swing.JMenu();
+        jMenuItemDatabaseCreateGroup = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jSplitPane.setDividerLocation(120);
 
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("root");
-        jTree1.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
-        jTree1.setRootVisible(false);
-        jScrollPane1.setViewportView(jTree1);
+        jTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
+        jTree.setRootVisible(false);
+        jScrollPane1.setViewportView(jTree);
 
         jSplitPane.setLeftComponent(jScrollPane1);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -79,34 +95,49 @@ public class JCredApp extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
-        jScrollPane2.setViewportView(jTable1);
+        jScrollPane2.setViewportView(jTable);
 
         jSplitPane.setRightComponent(jScrollPane2);
 
         jMenuFile.setMnemonic('f');
         jMenuFile.setText("File");
 
-        jMenuItemSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItemSave.setMnemonic('s');
-        jMenuItemSave.setText("Save");
-        jMenuFile.add(jMenuItemSave);
-        jMenuFile.add(jSeparator1);
+        jMenuItemFileNew.setText("New database");
+        jMenuFile.add(jMenuItemFileNew);
 
-        jMenuItemQuit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItemQuit.setMnemonic('q');
-        jMenuItemQuit.setText("Quit");
-        jMenuItemQuit.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItemFileLoad.setText("Load database");
+        jMenuItemFileLoad.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemQuitActionPerformed(evt);
+                jMenuItemFileLoadActionPerformed(evt);
             }
         });
-        jMenuFile.add(jMenuItemQuit);
+        jMenuFile.add(jMenuItemFileLoad);
+
+        jMenuItemFileSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemFileSave.setMnemonic('s');
+        jMenuItemFileSave.setText("Save");
+        jMenuFile.add(jMenuItemFileSave);
+        jMenuFile.add(jSeparator1);
+
+        jMenuItemFileQuit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemFileQuit.setMnemonic('q');
+        jMenuItemFileQuit.setText("Quit");
+        jMenuItemFileQuit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemFileQuitActionPerformed(evt);
+            }
+        });
+        jMenuFile.add(jMenuItemFileQuit);
 
         jMenuBar.add(jMenuFile);
 
-        jMenuEdit.setMnemonic('e');
-        jMenuEdit.setText("Edit");
-        jMenuBar.add(jMenuEdit);
+        jMenuDatabase.setMnemonic('d');
+        jMenuDatabase.setText("Database");
+
+        jMenuItemDatabaseCreateGroup.setText("Create group");
+        jMenuDatabase.add(jMenuItemDatabaseCreateGroup);
+
+        jMenuBar.add(jMenuDatabase);
 
         setJMenuBar(jMenuBar);
 
@@ -124,9 +155,28 @@ public class JCredApp extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-	private void jMenuItemQuitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemQuitActionPerformed
+	private void jMenuItemFileQuitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemFileQuitActionPerformed
 		System.exit(0);
-	}//GEN-LAST:event_jMenuItemQuitActionPerformed
+	}//GEN-LAST:event_jMenuItemFileQuitActionPerformed
+
+	private void jMenuItemFileLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemFileLoadActionPerformed
+		JFileChooser chooser = new JFileChooser();
+		if (chooser.showOpenDialog(this) != JFileChooser.APPROVE_OPTION)
+			return;
+
+		InputStream iStream;
+		try {
+			String fname = chooser.getSelectedFile().toString();
+			iStream = new FileInputStream(fname);
+			database = new Database(iStream);
+			iStream.close();
+		} catch (FileNotFoundException ex) {
+			Logger.getLogger(JCredApp.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (IOException ex) {
+			Logger.getLogger(JCredApp.class.getName()).log(Level.SEVERE, null, ex);
+		}
+
+	}//GEN-LAST:event_jMenuItemFileLoadActionPerformed
 
 	/**
 	 * @param args the command line arguments
@@ -171,15 +221,18 @@ public class JCredApp extends javax.swing.JFrame {
 	}
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar jMenuBar;
-    private javax.swing.JMenu jMenuEdit;
+    private javax.swing.JMenu jMenuDatabase;
     private javax.swing.JMenu jMenuFile;
-    private javax.swing.JMenuItem jMenuItemQuit;
-    private javax.swing.JMenuItem jMenuItemSave;
+    private javax.swing.JMenuItem jMenuItemDatabaseCreateGroup;
+    private javax.swing.JMenuItem jMenuItemFileLoad;
+    private javax.swing.JMenuItem jMenuItemFileNew;
+    private javax.swing.JMenuItem jMenuItemFileQuit;
+    private javax.swing.JMenuItem jMenuItemFileSave;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JSplitPane jSplitPane;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTree jTree1;
+    private javax.swing.JTable jTable;
+    private javax.swing.JTree jTree;
     // End of variables declaration//GEN-END:variables
 }
