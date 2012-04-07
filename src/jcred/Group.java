@@ -35,4 +35,13 @@ public class Group extends Node {
 	public void setName(String groupName) {
 		this.groupName = groupName;
 	}
+
+	/*
+	 * Used to display name on JTree.
+	 */
+
+	@Override
+	public String toString() {
+		return getName();
+	}
 }

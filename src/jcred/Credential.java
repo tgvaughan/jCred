@@ -71,6 +71,14 @@ public class Credential extends Node {
 	public void setUsername(String user) {
 		this.user = user;
 	}
+
+	/*
+	 * Used to display name in JTree.
+	 */
 	
+	@Override
+	public String toString() {
+		return getTitle();
+	}
 	
 }
