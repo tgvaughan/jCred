@@ -27,6 +27,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.tree.TreePath;
 
 /**
  *
@@ -54,6 +55,10 @@ public class JCredApp extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jTreeMenu = new javax.swing.JPopupMenu();
+        jTreeMenuNewCredential = new javax.swing.JMenuItem();
+        jTreeMenuNewGroup = new javax.swing.JMenuItem();
+        jMenuItemDeleteItem = new javax.swing.JMenuItem();
         jSplitPane = new javax.swing.JSplitPane();
         jScrollPaneLeft = new javax.swing.JScrollPane();
         jTree = new javax.swing.JTree();
@@ -76,11 +81,17 @@ public class JCredApp extends javax.swing.JFrame {
         jMenuItemFileSave = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jMenuItemFileQuit = new javax.swing.JMenuItem();
-        jMenuDatabase = new javax.swing.JMenu();
-        jMenuItemDatabaseCreateGroup = new javax.swing.JMenuItem();
-        jMenuItemDatabaseTest = new javax.swing.JMenuItem();
         jMenuHelp = new javax.swing.JMenu();
         jMenuItemHelpAbout = new javax.swing.JMenuItem();
+
+        jTreeMenuNewCredential.setText("jMenuItem1");
+        jTreeMenu.add(jTreeMenuNewCredential);
+
+        jTreeMenuNewGroup.setText("jMenuItem1");
+        jTreeMenu.add(jTreeMenuNewGroup);
+
+        jMenuItemDeleteItem.setText("jMenuItem1");
+        jTreeMenu.add(jMenuItemDeleteItem);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -88,6 +99,11 @@ public class JCredApp extends javax.swing.JFrame {
 
         jTree.setModel(database);
         jTree.setRootVisible(false);
+        jTree.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jTreeMouseReleased(evt);
+            }
+        });
         jScrollPaneLeft.setViewportView(jTree);
 
         jSplitPane.setLeftComponent(jScrollPaneLeft);
@@ -161,7 +177,7 @@ public class JCredApp extends javax.swing.JFrame {
                             .addComponent(jTextField2)
                             .addComponent(jTextField3)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelRightLayout.createSequentialGroup()
-                        .addGap(0, 282, Short.MAX_VALUE)
+                        .addGap(0, 70, Short.MAX_VALUE)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -221,24 +237,6 @@ public class JCredApp extends javax.swing.JFrame {
 
         jMenuBar.add(jMenuFile);
 
-        jMenuDatabase.setMnemonic('d');
-        jMenuDatabase.setText("Database");
-
-        jMenuItemDatabaseCreateGroup.setMnemonic('g');
-        jMenuItemDatabaseCreateGroup.setText("Create group");
-        jMenuDatabase.add(jMenuItemDatabaseCreateGroup);
-
-        jMenuItemDatabaseTest.setMnemonic('t');
-        jMenuItemDatabaseTest.setText("Test");
-        jMenuItemDatabaseTest.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemDatabaseTestActionPerformed(evt);
-            }
-        });
-        jMenuDatabase.add(jMenuItemDatabaseTest);
-
-        jMenuBar.add(jMenuDatabase);
-
         jMenuHelp.setMnemonic('h');
         jMenuHelp.setText("Help");
 
@@ -259,7 +257,7 @@ public class JCredApp extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane)
+            .addComponent(jSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 405, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -294,15 +292,21 @@ public class JCredApp extends javax.swing.JFrame {
 
 	}//GEN-LAST:event_jMenuItemFileLoadActionPerformed
 
-	private void jMenuItemDatabaseTestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemDatabaseTestActionPerformed
-		// TODO: Add test action code.
-	}//GEN-LAST:event_jMenuItemDatabaseTestActionPerformed
-
 	private void jMenuItemHelpAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemHelpAboutActionPerformed
 		String aboutText = "jCred password database manager";
 		JOptionPane.showMessageDialog(this, aboutText, "About jCred", JOptionPane.INFORMATION_MESSAGE,
 				new ImageIcon(getClass().getResource("/jcred/resources/jCred_icon.png")));
 	}//GEN-LAST:event_jMenuItemHelpAboutActionPerformed
+
+	private void jTreeMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTreeMouseReleased
+		TreePath path = jTree.getPathForLocation(evt.getX(), evt.getY());
+		if (path != null) {
+			Node node = (Node)path.getLastPathComponent();
+			System.out.println(node);
+		}
+
+		jTreeMenu.show(evt.getComponent(), evt.getX(), evt.getY());
+	}//GEN-LAST:event_jTreeMouseReleased
 
 	/**
 	 * @param args the command line arguments
@@ -353,11 +357,9 @@ public class JCredApp extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JMenuBar jMenuBar;
-    private javax.swing.JMenu jMenuDatabase;
     private javax.swing.JMenu jMenuFile;
     private javax.swing.JMenu jMenuHelp;
-    private javax.swing.JMenuItem jMenuItemDatabaseCreateGroup;
-    private javax.swing.JMenuItem jMenuItemDatabaseTest;
+    private javax.swing.JMenuItem jMenuItemDeleteItem;
     private javax.swing.JMenuItem jMenuItemFileLoad;
     private javax.swing.JMenuItem jMenuItemFileNew;
     private javax.swing.JMenuItem jMenuItemFileQuit;
@@ -373,5 +375,8 @@ public class JCredApp extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTree jTree;
+    private javax.swing.JPopupMenu jTreeMenu;
+    private javax.swing.JMenuItem jTreeMenuNewCredential;
+    private javax.swing.JMenuItem jTreeMenuNewGroup;
     // End of variables declaration//GEN-END:variables
 }
